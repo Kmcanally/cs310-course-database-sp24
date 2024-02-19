@@ -9,6 +9,11 @@ import java.sql.Statement;
 public class RegistrationDAO {
     
     private final DAOFactory daoFactory;
+    // Declare Query Strings for each method
+    private static final String QUERY_REGISTER = "INSERT INTO registration (studentid, termid, crn) VALUES (?, ?, ?)";
+    private static final String QUERY_DROP = "DELETE FROM registration WHERE (studentid = ?) AND (termid = ?) AND (crn = ?)";
+    private static final String QUERY_WITHDRAW = "DELETE FROM registration WHERE (studentid = ?) AND (termid = ?)";
+    private static final String QUERY_LIST = "SELECT * FROM registration WHERE (studentid = ?) AND (termid = ?)";
     
     RegistrationDAO(DAOFactory daoFactory) {
         this.daoFactory = daoFactory;
@@ -28,7 +33,11 @@ public class RegistrationDAO {
             if (conn.isValid(0)) {
                 
                 // INSERT YOUR CODE HERE
-                
+                ps = conn.prepareStatement(QUERY_REGISTER);     // prepare statement with predeclared query statements
+                ps.setInt(1, studentid);
+                ps.setInt(2, termid);
+                ps.setInt(3, crn);
+                result = ps.executeUpdate() > 0;    // result = a boolean evaluation
             }
             
         }
@@ -59,7 +68,12 @@ public class RegistrationDAO {
             if (conn.isValid(0)) {
                 
                 // INSERT YOUR CODE HERE
+                ps = conn.prepareStatement(QUERY_DROP);
+                ps.setInt(1, studentid);
+                ps.setInt(2, termid);
+                ps.setInt(3, crn);
                 
+                result = ps.executeUpdate() > 0;
             }
             
         }
@@ -89,7 +103,11 @@ public class RegistrationDAO {
             if (conn.isValid(0)) {
                 
                 // INSERT YOUR CODE HERE
+                ps = conn.prepareStatement(QUERY_WITHDRAW);     // prepare statement with predeclared query statements
+                ps.setInt(1, studentid);
+                ps.setInt(2, termid);
                 
+                result = ps.executeUpdate() > 0;
             }
             
         }
@@ -112,7 +130,7 @@ public class RegistrationDAO {
         
         PreparedStatement ps = null;
         ResultSet rs = null;
-        ResultSetMetaData rsmd = null;
+        //ResultSetMetaData rsmd = null;
         
         try {
             
@@ -121,6 +139,13 @@ public class RegistrationDAO {
             if (conn.isValid(0)) {
                 
                 // INSERT YOUR CODE HERE
+                ps = conn.prepareStatement(QUERY_LIST);     // prepare statement with predeclared query statements
+                ps.setInt(1, studentid);
+                ps.setInt(2, termid);
+                
+                rs = ps.executeQuery();
+                
+                result = DAOUtility.getResultSetAsJson(rs);
                 
             }
             
